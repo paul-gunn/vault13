@@ -1,19 +1,17 @@
-var getSupportedProducts = function() {
-
+var callVaultApi = function(serviceName, methodName, parameters, cb) {
+	var baseUri = 'http://localhost/autodeskdm/Services/';
+    var baseAction = 'http://AutodeskDM/Services/'
 	$.soap({
-		url: 'https://localhost/autodeskdm/services/informationservice.svc',
-		SOAPAction: "http://AutodeskDM/Services/InformationService/GetSupportedProducts",
-		data: {},
+		url: baseUri + serviceName + '.svc',
+		SOAPAction: baseAction + serviceName + '/' + methodName,
+		data: parameters || {},
 	
 		success: function (soapResponse) {
 			
 		console.log('success');
-		console.log(soapResponse.toJSON());
-		
-		// do stuff with soapResponse
-			// if you want to have the response as JSON use soapResponse.toJSON();
-			// or soapResponse.toString() to get XML string
-			// or soapResponse.toXML() to get XML DOM
+		var response = soapResponse.toJSON();
+		var data = response.Body[methodName + 'Response'][methodName + 'Result'];
+		cb(data);
 		},
 		error: function (SOAPResponse) {
 		console.log('failure')
@@ -21,4 +19,6 @@ var getSupportedProducts = function() {
 	});
 };
 
-getSupportedProducts();
+var products = callVaultApi('InformationService', 'GetSupportedProducts', {}, function(products) {
+	console.log(products);
+});
