@@ -1,0 +1,22 @@
+{
+  "name": "vault",
+  "authors": [
+    "Paul Gunn <paul.gunn@autodesk.com>"
+  ],
+  "description": "",
+  "main": "vault.js",
+  "license": "MIT",
+  "homepage": "index.html",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery.xml2json": "^1.3.0",
+    "jquery.soap": "^1.6.8"
+  }
+}
