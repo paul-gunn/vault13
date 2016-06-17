@@ -1,8 +1,21 @@
-class API {
+class VaultAPI {
     constructor(options) {
         this.IdentService = new IdentService();
         this.FilestoreVaultService = new FilestoreVaultService();
         this.AuthService = new AuthService();
+        this.DocService = new DocService();
+    }
+
+    signIn(userName, password, vaultName) {
+        return this.IdentService.GetServerIdentities()
+        .then(function(identities) {
+          return this.AuthService.SignIn(identities.DataServer, userName, password, vaultName);
+        }.bind(this))
+        .then(function(securityHeader) {
+            for( var service in this ) {
+                this[service]._securityHeader = securityHeader;
+            }
+        }.bind(this));
     }
 };
 
@@ -15,9 +28,11 @@ class ServiceBase {
 
     _callAPI(methodName, data, unwrapResponse = true) {
         data = data || {}
+        var soapHeader = this._securityHeader ? {SecurityHeader:this._securityHeader} : null;
 
         return new Promise(function(resolve, reject) {
-            _soap(this._uriPath, this._actionPath, this._serviceName, methodName, data, unwrapResponse, function(err, result) {
+            _soap(this._uriPath, this._actionPath, this._serviceName, 
+                methodName, data, soapHeader, unwrapResponse, function(err, result) {
                 if( !err ) { 
                     resolve(result);
                 } else { 
@@ -32,30 +47,30 @@ class ServiceBase {
 class IdentService extends ServiceBase {
     constructor() {
         super("IdentificationService", 'Filestore/v22/', 'Filestore/Identification/2/3/2016/');
-    }
+    };
 
     GetServerIdentities() {
         return this._callAPI('GetServerIdentities');	
-    }
+    };
 };
 
 class FilestoreVaultService extends ServiceBase {
     constructor() {
         super("FilestoreVaultService", 'Filestore/v22/','Filestore/FilestoreVault/2/3/2016/');
-    }
+    };
 
     GetAllKnowledgeVaults() {
         return this._callAPI('GetAllKnowledgeVaults')
         .then(function(vaults) {
             return vaults.KnowledgeVault;  // unwrap  
       });	
-    }
+    };
 };
 
 class AuthService extends ServiceBase {
     constructor() {
         super("AuthService", 'Filestore/v22/','Filestore/Auth/2/3/2016/');
-    }
+    };
 
     SignIn(dataServer, userName, userPassword, knowledgeVault) {
         var data = { dataServer: dataServer, userName: userName, userPassword: userPassword, knowledgeVault: knowledgeVault}
@@ -63,7 +78,18 @@ class AuthService extends ServiceBase {
         .then(function(soapResponse) {
             return soapResponse.Header.SecurityHeader;
       });	
-    }
+    };
+};
+
+class DocService extends ServiceBase {
+    constructor() {
+        super("DocumentService", 'v22/','Services/Document/2/3/2016/');
+    };
+
+    GetFolderRoot() {
+        return this._callAPI('GetFolderRoot');
+    };
+
 };
 
 // <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
@@ -75,7 +101,7 @@ class AuthService extends ServiceBase {
 
 
 
-var _soap = function(uriPath, actionPath, serviceName, methodName, parameters, unwrapResponse, cb) {
+var _soap = function(uriPath, actionPath, serviceName, methodName, parameters, soapHeader, unwrapResponse, cb) {
     var baseUri = 'http://localhost/autodeskdm/Services/';
     var baseAction = 'http://AutodeskDM/'
     $.soap({
@@ -85,6 +111,7 @@ var _soap = function(uriPath, actionPath, serviceName, methodName, parameters, u
         appendMethodToURL: false,
         method: methodName,
         namespaceURL: baseAction + actionPath,
+        SOAPHeader: soapHeader,
 
         success: function (soapResponse) {
             console.log(methodName + ' success');
