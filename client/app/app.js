@@ -32,6 +32,11 @@ angular.module('vaultly', [
 })
 
 .run(function ($rootScope, $location, Auth) {
+
+  Promise.setScheduler(function (cb) {
+      $rootScope.$evalAsync(cb);
+  });
+
   // here inside the run phase of angular, our services and controllers
   // have just been registered and our app is ready
   // however, we want to make sure the user is authorized

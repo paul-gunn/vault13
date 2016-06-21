@@ -5,9 +5,6 @@ angular.module('vaultly.main', [])
 
     VaultAPI.DocService.GetFolderRoot()
     .then(function(folder) {
-        $scope.dollar = folder;
-        $scope.$apply()   // force updates to be used (???)           
+        $scope.dollar = folder;     
     });
-
-  
 });
