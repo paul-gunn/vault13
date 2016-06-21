@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html ng-app='vaultly'>
+  <head>
+    <meta charset="utf-8" />
+    <title>Vault Viewer</title>
+    <link rel="stylesheet" type="text/css" href="styles/style.css" />
+   </head>
+  <body>
+    <h1>Vault Viewer</h1>
+    <div class='navigation'>
+    <ul> 
+      <li nav-element id="/main"><a href="#/main">Main</a></li>
+      <li nav-element id="/signout"><a href="#/signout">Sign Out</a></li>
+    </ul>
+    </div>
+
+    <!-- the ng-view directive is where our templates will be loaded into when naviagted to -->
+    <div ng-view></div>
+
+    <script src="./bower_components/bluebird/js/browser/bluebird.js"></script>
+    <script src="./bower_components/jquery/dist/jquery.js"></script>
+    <script src="./bower_components/jquery.xml2json/src/jquery.xml2json.js"></script>
+    <script src="./bower_components/jquery.soap/jquery.soap.js"></script>
+    <script src="./bower_components/angular/angular.js"></script>
+    <script src="./bower_components/angular-route/angular-route.js"></script>
+    <script src="api/vaultapi.js"></script>
+
+    <script src="app/auth/auth.js"></script>
+    <script src="app/main/main.js"></script>
+    <script src="app/services/services.js"></script>
+    <script src="app/nav.js"></script>
+    <script src="app/app.js"></script>
+  </body>
+</html>

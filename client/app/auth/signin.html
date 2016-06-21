@@ -1,0 +1,17 @@
+<div id='signin'>
+  <form name="signinForm" ng-submit='signin()'>
+  <div class="form-group">
+      <label for="user-name">User name: </label>
+      <input name="user-name" type='text' ng-model='user.username' required/>
+  </div>
+  <div class="form-group">
+      <label for="user-password">Password: </label>
+      <input name="user-password" type="password" ng-model='user.password'/>
+  </div>
+  <div class="form-group">
+      <label for="user-vault">Vault: </label>
+      <select name="user-vault" ng-model="user.vault" ng-options="vault as vault.Name for vault in vaults"></select>
+  </div>
+   <button>signin</button>
+  </form>
+</div>

@@ -4,7 +4,7 @@ class VaultAPI {
         this.FilestoreVaultService = new FilestoreVaultService();
         this.AuthService = new AuthService();
         this.DocService = new DocService();
-    }
+    };
 
     signIn(userName, password, vaultName) {
         return this.IdentService.GetServerIdentities()
@@ -16,7 +16,18 @@ class VaultAPI {
                 this[service]._securityHeader = securityHeader;
             }
         }.bind(this));
-    }
+    };
+
+    signOut() { //TODO: real signout call
+        for( var service in this ) {
+            delete this[service]._securityHeader;
+        }
+
+    };
+
+    isAuth() {
+        return !!this.AuthService._securityHeader;
+    };
 };
 
 class ServiceBase {
