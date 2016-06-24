@@ -8,8 +8,13 @@
     "dev": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-   "dependencies": {
-    "express": "^4.13.2"
+  "dependencies": {
+    "bluebird": "^3.4.1",
+    "body-parser": "^1.15.2",
+    "express": "^4.13.2",
+    "multer": "^1.1.0",
+    "request": "^2.72.0",
+    "streamifier": "^0.1.1"
   },
   "private": true
 }
