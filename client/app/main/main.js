@@ -14,9 +14,13 @@ angular.module('vaultly.main', [])
     $scope.doView = function(file) {
         console.log(file);
 
-        VaultAPI.DocService.GetDownloadTickets([file, file])
+        VaultAPI.DocService.GetDownloadTickets([file])
         .then(function(results) {
             console.log(results);
+            return VaultAPI.FilestoreService.DownloadFile(file);
+        })
+        .then(function(results) {
+            console.log(atob(results));
         });
 
     };    

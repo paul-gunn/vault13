@@ -2,6 +2,7 @@ class VaultAPI {
     constructor(options) {
         this.IdentService = new IdentService();
         this.FilestoreVaultService = new FilestoreVaultService();
+        this.FilestoreService = new FilestoreService();
         this.AuthService = new AuthService();
         this.DocService = new DocService();
     };
@@ -119,7 +120,13 @@ class DocService extends ServiceBase {
          `<GetDownloadTicketsByFileIds xmlns="http://AutodeskDM/Services/Document/2/3/2016/"> \
             <fileIds>${ids}</fileIds> \
           </GetDownloadTicketsByFileIds>`
-        return this._callAPI('GetDownloadTicketsByFileIds', data).then(_normalizeArrayResult);
+        return this._callAPI('GetDownloadTicketsByFileIds', data).then(_normalizeArrayResult)
+        .then(function(tickets) {
+            for(var i = 0; i < files.length; i++ ) {
+                files[i].DownloadTicket = tickets[i].Bytes;
+            }
+            return files;
+        });
     }
 };
 
@@ -128,22 +135,15 @@ class FilestoreService extends ServiceBase {
         super("FilestoreService", 'Filestore/v22/','Filestore/Filestore/2/3/2016/');
     };
 
-    // GetAllKnowledgeVaults() {
-    //     return this._callAPI('GetAllKnowledgeVaults')
-    //     .then(function(vaults) {
-    //         return vaults.KnowledgeVault;  // unwrap  
-    //   });	
-    // };
+    DownloadFile(file) {
+       if( !file.DownloadTicket ) {
+           throw new Error('must get download ticket before doing download');
+       }
+       
+       var data = { downloadTicket: file.DownloadTicket, firstByte: 0, lastByte: file.FileSize, allowSync: true};
+       return this._callAPI('DownloadFilePart', data);
+    }
 };
-
-
-//<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
- //<s:Header><CompressionHeader xmlns="http://AutodeskDM/Filestore/Filestore/2/3/2016/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
- //<Supported>None</Supported></CompressionHeader></s:Header><s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-   //<DownloadFilePart xmlns="http://AutodeskDM/Filestore/Filestore/2/3/2016/">
-     //<downloadTicket>SvcAWDxwn9Io+aL3T+YTzmfJnstDwshY7kwyI8QMol0MW3qnCz9iJie50yrnGCY+/X/kKp06gj6cm3a06uIk4OvYsmTdsLIxeJLwfF3I6RPJqzLNijliK4mtXM3H/15ww2WuP5xyk3LXAUsYHR4NfvC8OR3XRlmxv+Su3kM8dA4TQ7r+1641W2WwyTIj2MMt3QeUBPw8U6V77Ixll6tie/5Y2PNpb5m6NHAH89lzlWU6paKRoqx1jPw8/8phHwz6G72pcYtbt7cv9Oeh/b+9jESOQE7I3cuX5fymnMg0+BhpV7i1O8OcWTWmkT7P3w+6SXPTe4DMcziE9IV8Yaef4IvClZ6rz3o67/SYlm6/M/W40UhvxhY2NsV8Dcc86399KYuP61RToAPLtpNSLbgh30CnpJCte4vYM/y2SASBnRI4CMkGiaGqBBlTbU5zLlzYdFR+hTkkfhKOW/hVmLKV6z8dZynXh5KiVw2N+Ex94r0=</downloadTicket>
-   //  <firstByte>0</firstByte><lastByte>52418559</lastByte><allowSync>true</allowSync></DownloadFilePart>
-
 
 //<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Header><SecurityHeader xmlns="http://AutodeskDM/Services" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   //<Ticket>85c079bc-b8aa-464d-b2e8-0450b07475c0</Ticket><UserId>2</UserId></SecurityHeader></s:Header><s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
@@ -157,13 +157,6 @@ class FilestoreService extends ServiceBase {
  //</FindFilesBySearchConditions>
 //</s:Body></s:Envelope>
 
-
-// <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-//  <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-//   <SignIn xmlns="http://AutodeskDM/Filestore/Auth/2/3/2016/">
-//    <dataServer>http://site1/</dataServer><userName>administrator</userName><userPassword/><knowledgeVault>Vault</knowledgeVault></SignIn>
-// </s:Body>
-// </s:Envelope>
 
 var _normalizeArrayResult = function(result) {
     if( result == null ) {
