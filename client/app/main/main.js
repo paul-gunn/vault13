@@ -7,7 +7,7 @@ angular.module('vaultly.main', [])
     $scope.doSearch = function() {
         VaultAPI.DocService.FindFilesBySearchConditions($scope.searchText)
         .then(function(files) {
-            $scope.files = files ? files.File : [];     
+            $scope.files = files;     
         });
     };
 

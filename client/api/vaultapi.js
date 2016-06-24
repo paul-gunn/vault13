@@ -107,7 +107,17 @@ class DocService extends ServiceBase {
             <conditions><SrchCond PropDefId="0" SrchOper="1" SrchTxt="${searchText}" PropTyp="AllProperties" SrchRule="Must"/></conditions> \
             <latestOnly>true</latestOnly> \
           </FindFilesBySearchConditions>`
-        return this._callAPI('FindFilesBySearchConditions', data);
+        return this._callAPI('FindFilesBySearchConditions', data).
+        then(function(resp) {
+            if( resp == null ) { // normalize response
+                return [];
+            } else if (Array.isArray(resp.File)) {
+                return resp.File;
+            } else {
+                return [resp.File];
+            }
+    
+        });
     };
     
 };
