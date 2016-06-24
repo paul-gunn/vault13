@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html ng-app='vaultly'>
+<html ng-app='vaultViewer'>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vault Viewer</title>
     <link rel="stylesheet" type="text/css" href="styles/style.css" />
+    <link rel="stylesheet" href="https://developer.api.autodesk.com/viewingservice/v1/viewers/style.css?v=1.2.8"/>
    </head>
   <body>
     <img id="main-icon" src="assets/vault.jpg" />
     <div class='navigation'>
     <ul> 
       <li nav-element id="/main"><a href="#/main">Main</a></li>
+      <li nav-element id="/viewer"><a href="#/viewer">Viewer</a></li>
       <li nav-element id="/signout"><a href="#/signout">Sign Out</a></li>
     </ul>
     </div>
@@ -23,11 +26,16 @@
     <script src="./bower_components/jquery.soap/jquery.soap.js"></script>
     <script src="./bower_components/angular/angular.js"></script>
     <script src="./bower_components/angular-route/angular-route.js"></script>
+ 
+    <!-- adsk viewing -->
+    <script src="https://developer.api.autodesk.com/viewingservice/v1/viewers/viewer3D.min.js"></script>
+    <script src="https://developer.api.autodesk.com/viewingservice/v1/viewers/Autodesk360App.js"></script>
+    
     <script src="api/vaultapi.js"></script>
     <script src="api/forgeapi.js"></script>
-
     <script src="app/auth/auth.js"></script>
     <script src="app/main/main.js"></script>
+    <script src="app/viewer/viewer.js"></script>
     <script src="app/services/services.js"></script>
     <script src="app/nav.js"></script>
     <script src="app/app.js"></script>

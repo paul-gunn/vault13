@@ -1,4 +1,4 @@
-angular.module('vaultly.services', [])
+angular.module('vaultViewer.services', [])
 
 .factory("VaultAPI", function() {
   return new VaultAPI();

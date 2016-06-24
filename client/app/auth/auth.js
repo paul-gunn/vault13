@@ -1,5 +1,5 @@
 
-angular.module('vaultly.auth', [])
+angular.module('vaultViewer.auth', [])
 
 .controller('AuthController', function (vaults, $scope, $location, Auth, VaultAPI) {
   $scope.user = {};

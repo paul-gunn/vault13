@@ -1,4 +1,4 @@
-angular.module('vaultly.nav', [])
+angular.module('vaultViewer.nav', [])
 
 .directive('navElement', function () {
     return {

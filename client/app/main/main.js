@@ -1,4 +1,4 @@
-angular.module('vaultly.main', [])
+angular.module('vaultViewer.main', [])
 
 .controller('MainController', function ($scope, VaultAPI, ForgeAPI) {
     $scope.files = [];

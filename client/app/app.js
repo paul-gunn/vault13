@@ -1,8 +1,9 @@
-angular.module('vaultly', [
-  'vaultly.services',
-  'vaultly.main',
-  'vaultly.auth',
-  'vaultly.nav',
+angular.module('vaultViewer', [
+  'vaultViewer.services',
+  'vaultViewer.main',
+  'vaultViewer.viewer',
+  'vaultViewer.auth',
+  'vaultViewer.nav',
   'ngRoute'
 ])
 .config(function ($routeProvider, $httpProvider) {
@@ -17,6 +18,11 @@ angular.module('vaultly', [
     .when('/main', {
       templateUrl: 'app/main/main.html',
       controller: 'MainController',
+      authenticate: true
+    })
+    .when('/viewer', {
+      templateUrl: 'app/viewer/viewer.html',
+      controller: 'ViewerController',
       authenticate: true
     })
     .when('/signout', {
