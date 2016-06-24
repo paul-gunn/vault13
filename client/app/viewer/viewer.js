@@ -1,8 +1,7 @@
 angular.module('vaultViewer.viewer', [])
 
 .controller('ViewerController', function ($scope, $timeout, VaultAPI, ForgeAPI, ViewState) {
-  
-    console.log(ViewState.viewFile)
+    var viewerLocation = 'viewer';
 
     var transferFile = function(file) {
         return VaultAPI.DocService.GetDownloadTickets([file])
@@ -44,13 +43,18 @@ angular.module('vaultViewer.viewer', [])
             return renderView(urn);
         })
         .then(function(urn) {
-            return ForgeAPI.signinAndView('viewer', urn)
+            ViewState.setRenderedFile(ViewState.viewFile, urn); // cache data about rendered file
+            return ForgeAPI.signinAndView(viewerLocation, urn)
         })
     };
 
-    // TODO: cache rendered view urns in viewstate
     if( ViewState.viewFile ) {
-        doView(ViewState.viewFile);
+        var urn = ViewState.getRenderedFile(ViewState.viewFile); // use previously rendered file if possible
+        if( urn ) {
+            ForgeAPI.signinAndView(viewerLocation, urn)
+        } else {
+            doView(ViewState.viewFile);
+        }
     }
 });
 
