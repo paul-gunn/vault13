@@ -6,6 +6,9 @@ angular.module('vaultViewer.services', [])
 .factory("ForgeAPI", function($http) {
   return new ForgeAPI($http);
 })
+.factory("ViewState", function() {
+  return {};
+})
 .factory('Auth', function (VaultAPI, $location) {
   var signin = function (user) {
     return VaultAPI.signIn(user.username, user.password, user.vault.Name); 

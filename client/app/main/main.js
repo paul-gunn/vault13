@@ -1,8 +1,8 @@
 angular.module('vaultViewer.main', [])
 
-.controller('MainController', function ($scope, VaultAPI, ForgeAPI) {
-    $scope.files = [];
-    $scope.searchText = "";
+.controller('MainController', function ($scope, $location, VaultAPI, ViewState) {
+    $scope.files = ViewState.searchFiles || [];
+    $scope.searchText = ViewState.searchText ||"";
 
     $scope.doSearch = function() {
         VaultAPI.DocService.FindFilesBySearchConditions($scope.searchText)
@@ -12,21 +12,14 @@ angular.module('vaultViewer.main', [])
     };
 
     $scope.doView = function(file) {
-        console.log(file);
-
-        VaultAPI.DocService.GetDownloadTickets([file])
-        .then(function(results) {
-            console.log(results);
-            return VaultAPI.FilestoreService.DownloadFile(file);
-        })
-        .then(function(base64data) {
-            return ForgeAPI.uploadFile(base64data);
-        })
-        .then(function(results) {
-            console.log(results);
-         });
-
+        ViewState.viewFile = file; 
+        $location.path('/viewer');   
     };    
+
+    $scope.$on("$destroy", function(){
+        ViewState.searchFiles = $scope.files;
+        ViewState.searchText = $scope.searchText; 
+    });
 
 }).directive('vaultFile', function () {
   return {

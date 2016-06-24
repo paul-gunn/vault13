@@ -1,7 +1,9 @@
 angular.module('vaultViewer.viewer', [])
 
-.controller('ViewerController', function ($scope, VaultAPI, ForgeAPI) {
+.controller('ViewerController', function ($scope, VaultAPI, ForgeAPI, ViewState) {
   
+      console.log(ViewState.viewFile)
+
       $scope.doView = function(file) {
         console.log(file);
 
