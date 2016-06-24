@@ -5,6 +5,8 @@ var router = express.Router();
 var forge = require('../forge/services.js');
 var multer = require('multer')
 var bodyParser = require('body-parser')
+var uuid = require('node-uuid');
+
 router.use( bodyParser() );       // to support JSON-encoded bodies
 
 router.post("/signin", function(req, res) {
@@ -18,7 +20,8 @@ router.post("/signin", function(req, res) {
 
 router.post("/upload", multer().single('fileupload'), function(req, res) {
 
-    forge.upload(req.file.originalname, req.file.buffer)
+    var ext = req.headers['x-file-ext'];
+    forge.upload(uuid.v1() + '.' + ext, req.file.buffer)
     .then(function(urn) {
        res.json({urn:urn});
     });
