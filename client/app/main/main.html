@@ -1,6 +1,6 @@
 <div id='container' >
   <ul>
-    <input id='searchbox' type="text" ng-model="searchText" />
+    <input id='searchbox' type="text" ng-model="searchText" ng-model-options="{ debounce: 500 }" ng-change="doSearch()" />
     <vault-file  ng-repeat='file in files' /> 
   </ul>
 </div>

@@ -1,12 +1,16 @@
 angular.module('vaultly.main', [])
 
 .controller('MainController', function ($scope, VaultAPI) {
-    $scope.dollar = {} 
+    $scope.files = [];
+    $scope.searchText = "";
 
-    VaultAPI.DocService.FindFilesBySearchConditions("test")
-    .then(function(files) {
-        $scope.files = files.File;     
-    });
+    $scope.doSearch = function() {
+        VaultAPI.DocService.FindFilesBySearchConditions($scope.searchText)
+        .then(function(files) {
+            $scope.files = files ? files.File : [];     
+        });
+    };
+
 }).directive('vaultFile', function () {
   return {
     template: "<li class='vaultfile' > \
