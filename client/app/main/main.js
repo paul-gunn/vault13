@@ -11,11 +11,16 @@ angular.module('vaultly.main', [])
         });
     };
 
+    $scope.doView = function(file) {
+        console.log(file);
+
+    };    
+
 }).directive('vaultFile', function () {
   return {
     template: "<li class='vaultfile' > \
       <span class='filename' >{{file.Name}}</span> \
-      <a class='fileview' href='#' ng-click='view(file)'>View</a> \
+      <a class='fileview' href='' ng-click='doView(file)'>View</a> \
     </li>"
   };
 });
