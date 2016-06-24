@@ -101,7 +101,29 @@ class DocService extends ServiceBase {
         return this._callAPI('GetFolderRoot');
     };
 
+    FindFilesBySearchConditions(searchText) {  // assumes we are just searching all properties
+        var data =
+         `<FindFilesBySearchConditions xmlns="http://AutodeskDM/Services/Document/2/3/2016/"> \
+            <conditions><SrchCond PropDefId="0" SrchOper="1" SrchTxt="${searchText}" PropTyp="AllProperties" SrchRule="Must"/></conditions> \
+            <latestOnly>true</latestOnly> \
+          </FindFilesBySearchConditions>`
+        return this._callAPI('FindFilesBySearchConditions', data);
+    };
+    
 };
+
+//<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Header><SecurityHeader xmlns="http://AutodeskDM/Services" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  //<Ticket>85c079bc-b8aa-464d-b2e8-0450b07475c0</Ticket><UserId>2</UserId></SecurityHeader></s:Header><s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  //<FindFilesBySearchConditions xmlns="http://AutodeskDM/Services/Document/2/3/2016/">
+    //<conditions><SrchCond PropDefId="0" SrchOper="1" SrchTxt="test" PropTyp="AllProperties" SrchRule="Must"/><SrchCond PropDefId="19" SrchOper="10" SrchTxt="1" PropTyp="SingleProperty" SrchRule="Must"/></conditions><sortConditions>
+    //<SrchSort PropDefId="13" SortAsc="false"/></sortConditions>
+    //<folderIds/>
+    //<recurseFolders>true</recurseFolders>
+    //<latestOnly>true</latestOnly>
+    //<bookmark/>
+ //</FindFilesBySearchConditions>
+//</s:Body></s:Envelope>
+
 
 // <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
 //  <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">

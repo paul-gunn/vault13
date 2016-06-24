@@ -49,6 +49,6 @@ angular.module('vaultly', [
       $location.path('/signin');
     }
 
-    $rootScope.$broadcast('navChanged', next.$$route.originalPath);
+    if(next.$$route) $rootScope.$broadcast('navChanged', next.$$route.originalPath);
   });
 });

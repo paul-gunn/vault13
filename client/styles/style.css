@@ -4,12 +4,6 @@ body {
   font-family: arial, sans-serif;
 }
 
-a {
-  color: #333;
-  font-size: 14px;
-  text-decoration: none;
-}
-
 h1 {
   font-style: italic;
   margin-bottom: 10px;
@@ -39,7 +33,11 @@ ul {
   float: left;
 }
 
+
 .navigation li a {
+  color: #333;
+  font-size: 14px;
+  text-decoration: none;
   width: 100px;
   height: 20px;
   line-height: 20px;
@@ -61,46 +59,27 @@ ul {
   margin-top: 10px;
 }
 
-.link {
+#searchbox {
+  margin-bottom: 20px
+}
+.vaultfile {
   clear: both;
-  margin-bottom: 5px;
-  padding: 5px;
-  min-height: 50px;
+  padding: 10px;
+  min-height: 30px;
+  width: 60%;  
+  background-color: lightblue; 
+  margin-bottom: 20px    
 }
 
-.link:hover {
-  background-color: #efe;
-  cursor: pointer;
+.vaultfile .filename {
+   float: left;  
+   clear: left;
 }
 
-.link .visits {
-  float: right;
-  margin-right: 10px;
-  margin-left: 20px;
-  vertical-align: top
-}
-
-.link .visits .count {
-  font-size: 46px;
-  font-weight: 600;
-}
-
-.link .title {
-  font-weight: 600;
-  float: left;  
-  clear: left;
-}
-
-.link .original {
-  color: #aaa;
-  font-size: 12px;
-  float: left;
-  clear: left;
-
-}
-
-.link .info {
-  margin-left: 55px;
+.vaultfile .fileview {
+   padding-left: 50px;  
+   font-style: italic;
+      float: right;  
 }
 
 form {

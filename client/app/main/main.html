@@ -1,5 +1,6 @@
 <div id='container' >
- <pre>
-   {{dollar}}
- </pre>
+  <ul>
+    <input id='searchbox' type="text" ng-model="searchText" />
+    <vault-file  ng-repeat='file in files' /> 
+  </ul>
 </div>
