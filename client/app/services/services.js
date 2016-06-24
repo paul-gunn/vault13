@@ -2,7 +2,9 @@ angular.module('vaultly.services', [])
 
 .factory("VaultAPI", function() {
   return new VaultAPI();
-
+})
+.factory("ForgeAPI", function($http) {
+  return new ForgeAPI($http);
 })
 .factory('Auth', function (VaultAPI, $location) {
   var signin = function (user) {

@@ -1,6 +1,6 @@
 angular.module('vaultly.main', [])
 
-.controller('MainController', function ($scope, VaultAPI) {
+.controller('MainController', function ($scope, VaultAPI, ForgeAPI) {
     $scope.files = [];
     $scope.searchText = "";
 
@@ -19,9 +19,12 @@ angular.module('vaultly.main', [])
             console.log(results);
             return VaultAPI.FilestoreService.DownloadFile(file);
         })
+        .then(function(base64data) {
+            return ForgeAPI.uploadFile(base64data);
+        })
         .then(function(results) {
-            console.log(atob(results));
-        });
+            console.log(results);
+         });
 
     };    
 
