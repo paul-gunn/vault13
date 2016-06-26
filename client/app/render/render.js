@@ -9,12 +9,15 @@ angular.module('vaultViewer.render', [])
     }
 
     var waitForCompletion = function() {
-        currentJob = Renderer.getCurrentJob();
-        if( currentJob.done ) {
-            $location.path('/view/' + currentJob.urn);   
-        } else {
-            timer = $timeout(waitForCompletion, 1000);
-        }
+        Renderer.getCurrentJob()
+        .then(function(currentJob) {
+            if( currentJob.done ) {
+                $location.path('/view/' + currentJob.urn);   
+            } else {
+                $scope.currentJob = currentJob;
+                timer = $timeout(waitForCompletion, 1000);
+            }
+        });
     };
 
     $scope.$on("$destroy",function( event ) {

@@ -21,22 +21,26 @@ class Renderer
     }
 
     getCurrentJob() {
-        if( !this._currentJob.done && this._currentJob.urn ) {
-            return this._getRenderStatus(this._currentJob.urn)
-            .then(function(isRendered) {
-                if( isRendered ) {
-                    this._currentJob.done = true;
-                    this._setRenderedFile(this._currentJob.file, this._currentJob.urn); 
-                }
-                return this._currentJob;
+        if( this._currentJob.done || !this._currentJob.urn ) { 
+            return new Promise(function(resolve, reject) { // return immediate result in a promise
+                resolve(this._currentJob);
             }.bind(this));
         }
-        
-        return this._currentJob;
+
+        return this._getRenderStatus(this._currentJob.urn)
+        .then(function(result) {
+            if( result.progress === 'complete' ) {
+                this._currentJob.done = true;
+                this._setRenderedFile(this._currentJob.file, this._currentJob.urn); 
+            }  else {
+                this._currentJob.progress = 'Rendering.. ' + result.progress;
+            }
+            return this._currentJob;
+        }.bind(this));
     }
 
     renderFile(file) {
-        this._currentJob = { file: file, done: false, urn: null  };
+        this._currentJob = { file: file, done: false, urn: null, progress: 'Uploading files..'  };
 
         return this._transferFile(file)
         .then(function(urn) {
@@ -65,7 +69,7 @@ class Renderer
         .then( function(result) {
             console.log('awaiting render')
             console.log(result.progress);
-            return result.progress === 'complete';
+            return result;
         });
     };
 
