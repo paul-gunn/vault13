@@ -4,15 +4,15 @@ angular.module('vaultViewer.viewer', [])
     var viewerLocation = 'viewer';
     var urn = $routeParams.urn;
     if( !urn ) {
-        urn = ViewState.lastViewedUrn;
+        if( ViewState.lastViewedUrn ) {
+           $location.path('/view/' + ViewState.lastViewedUrn);   
+        } else {
+           $location.path('/main');   
+        }
     }
 
-    if( urn ) {  // TODO: check for rendering exists?
-        ForgeAPI.signinAndView(viewerLocation, urn)
-    } else {
-        $location.path('/main');   
-    }
-
+    ForgeAPI.signinAndView(viewerLocation, urn) // TODO: check for rendering still exists?
+    
     $scope.$on("$destroy", function(){
         ViewState.lastViewedUrn = urn;
     });    

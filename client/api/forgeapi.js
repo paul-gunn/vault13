@@ -25,7 +25,7 @@ class ForgeAPI {
         return this.$http.get('/api/viewStatus', 
            { params: { urn: urn } } ).then(_extractData)
              .then(function(result) {
-                return JSON.parse(result);
+                return result ? JSON.parse(result) : null;
              });
     };
 
