@@ -1,6 +1,7 @@
 angular.module('vaultViewer', [
   'vaultViewer.services',
   'vaultViewer.main',
+  'vaultViewer.render',  
   'vaultViewer.viewer',
   'vaultViewer.auth',
   'vaultViewer.nav',
@@ -20,10 +21,20 @@ angular.module('vaultViewer', [
       controller: 'MainController',
       authenticate: true
     })
-    .when('/viewer', {
+    .when('/render', {
+      templateUrl: 'app/render/render.html',
+      controller: 'RenderController',
+      authenticate: true
+    })
+    .when('/view', {
       templateUrl: 'app/viewer/viewer.html',
       controller: 'ViewerController',
-      authenticate: true
+      authenticate: false // anyone can view something that is already rendered
+    })
+    .when('/view/:urn', {
+      templateUrl: 'app/viewer/viewer.html',
+      controller: 'ViewerController',
+      authenticate: false // anyone can view something that is already rendered
     })
     .when('/signout', {
         template: "",

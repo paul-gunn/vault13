@@ -1,6 +1,6 @@
 angular.module('vaultViewer.main', [])
 
-.controller('MainController', function ($scope, $location, VaultAPI, ViewState) {
+.controller('MainController', function ($scope, $location, VaultAPI, ViewState, Renderer) {
     $scope.files = ViewState.searchFiles || [];
     $scope.searchText = ViewState.searchText ||"";
 
@@ -12,8 +12,13 @@ angular.module('vaultViewer.main', [])
     };
 
     $scope.doView = function(file) {
-        ViewState.viewFile = file; 
-        $location.path('/viewer');   
+        var urn = Renderer.getRendering(file);
+        if( urn) {
+            $location.path('/view/' + urn);   
+        } else {
+           Renderer.renderFile(file); 
+           $location.path('/render');   
+         }
     };    
 
     $scope.$on("$destroy", function(){

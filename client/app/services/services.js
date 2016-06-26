@@ -6,21 +6,12 @@ angular.module('vaultViewer.services', [])
 .factory("ForgeAPI", function($http) {
   return new ForgeAPI($http);
 })
+.factory("Renderer", function(VaultAPI, ForgeAPI) {
+  return new Renderer(VaultAPI, ForgeAPI);
+})
 .factory("ViewState", function() {
     var current_data = {}; 
-    var defaults = {
-      // also used as a generic property bag for maintaining state across view switches
-      
-      renderedFiles : {},
-
-      setRenderedFile : function(file, urn) {
-        this.renderedFiles[file.Id] = urn;
-      },
-      
-      getRenderedFile(file) {
-        return this.renderedFiles[file.Id] || null;
-      },
-
+    var defaults = { //  used as a generic property bag for maintaining state across view switches
       resetData: function() { 
         return current_data = angular.copy(defaults, current_data ); 
       }
@@ -29,7 +20,7 @@ angular.module('vaultViewer.services', [])
     defaults.resetData();
     return current_data;
 })
-.factory('Auth', function (VaultAPI, $location, ViewState) {
+.factory('Auth', function (VaultAPI, $location, ViewState, Renderer) {
   var signin = function (user) {
     return VaultAPI.signIn(user.username, user.password, user.vault.Name); 
   };
@@ -40,6 +31,7 @@ angular.module('vaultViewer.services', [])
 
   var signout = function () {
     ViewState.resetData();
+    Renderer.resetData();
     VaultAPI.signOut();
     $location.path('/signin');
   };
