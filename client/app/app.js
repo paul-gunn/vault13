@@ -19,6 +19,7 @@ angular.module('vaultViewer', [
     .when('/main', {
       templateUrl: 'app/main/main.html',
       controller: 'MainController',
+      activetab: 'main',
       authenticate: true
     })
     .when('/render', {
@@ -29,11 +30,13 @@ angular.module('vaultViewer', [
     .when('/view', {
       templateUrl: 'app/viewer/viewer.html',
       controller: 'ViewerController',
+      activetab: 'view',
       authenticate: false // anyone can view something that is already rendered
     })
     .when('/view/:urn', {
       templateUrl: 'app/viewer/viewer.html',
       controller: 'ViewerController',
+      activetab: 'view',
       authenticate: false // anyone can view something that is already rendered
     })
     .when('/signout', {
@@ -66,6 +69,6 @@ angular.module('vaultViewer', [
       $location.path('/signin');
     }
 
-    if(next.$$route) $rootScope.$broadcast('navChanged', next.$$route.originalPath);
+    if(next.$$route) $rootScope.$broadcast('navChanged', next.$$route.activetab);
   });
 });
