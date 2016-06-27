@@ -11,7 +11,7 @@ router.use( bodyParser() );       // to support JSON-encoded bodies
 
 router.post("/signin", function(req, res) {
 
-    forge.authenticate()
+    forge.authenticate(true)
     .then(function(creds) {
         res.json(creds);
     });

@@ -5,7 +5,7 @@ var _request = require('request');
 var request = Promise.promisify(require('request'));
 var streamifier = require('streamifier');
 
-var baseUrl = 'https://developer-dev.api.autodesk.com';
+var baseUrl = credentials.url;
 var version = 'v1';
 var forgeUrls = {
 	authenticationUrl: baseUrl + '/authentication/' + version + '/authenticate',
@@ -17,10 +17,11 @@ var forgeUrls = {
 
 var grantType = 'client_credentials';
 var	scope = 'data:read data:write data:create data:search bucket:create bucket:read bucket:update';
+var	scope_client = 'data:read';
 
 
 
-var authenticate = function() {
+var authenticate = function(isclient) {
     return request( {
         url: forgeUrls.authenticationUrl,
         method: 'POST',
@@ -29,7 +30,7 @@ var authenticate = function() {
             client_id: credentials.clientId,
             client_secret: credentials.clientSecret,
             grant_type: grantType,
-            scope: scope
+            scope: isclient ? scope_client : scope
         }   
     })
     .then(function(resp) {     

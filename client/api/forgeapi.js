@@ -39,7 +39,7 @@ class ForgeAPI {
     runViewer(viewLocation, token, urn) {
         var viewerApp;
         var options = {
-            env: 'AutodeskDevelopment',
+            env: 'AutodeskStaging', // 'AutodeskDevelopment',
             accessToken: token
         };
         Autodesk.Viewing.Initializer(options, function onInitialized(){
