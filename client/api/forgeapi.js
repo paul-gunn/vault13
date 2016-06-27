@@ -32,14 +32,14 @@ class ForgeAPI {
     signinAndView(viewLocation, urn) {
         return this.$http.post('/api/signin').then(_extractData)
         .then(function(authToken) {
-            this.runViewer(viewLocation, authToken.access_token, 'urn:' + urn);
+            this.runViewer(viewLocation, authToken.access_token, authToken.url, 'urn:' + urn);
         }.bind(this));  
     };
 
-    runViewer(viewLocation, token, urn) {
+    runViewer(viewLocation, token, tokenUrl, urn) {
         var viewerApp;
         var options = {
-            env: 'AutodeskStaging', // 'AutodeskDevelopment',
+            env: this.determineEnv(tokenUrl),
             accessToken: token
         };
         Autodesk.Viewing.Initializer(options, function onInitialized(){
@@ -47,7 +47,16 @@ class ForgeAPI {
             viewerApp.registerViewer(viewerApp.k3D, Autodesk.Viewing.Private.GuiViewer3D);
             viewerApp.loadDocumentWithItemAndObject(urn);
         });
-    };    
+    };   
+
+    determineEnv(tokenUrl) {
+       var envs = {
+		'https://developer-stg.api.autodesk.com' : 'AutodeskStaging',
+		'https://developer-dev.api.autodesk.com' : 'AutodeskDevelopment',
+		'https://developer.api.autodesk.com' : 'AutodeskProduction'
+      };
+      return envs[tokenUrl];
+    };
 };
 
 

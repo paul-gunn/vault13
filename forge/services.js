@@ -34,7 +34,9 @@ var authenticate = function(isclient) {
         }   
     })
     .then(function(resp) {     
-      return JSON.parse(resp.body);
+      var creds = JSON.parse(resp.body);
+      creds.url = credentials.url;
+      return creds;
      });
 };
 
@@ -211,4 +213,4 @@ module.exports = {
     createRelationships:createRelationships
 }
 
-var bucketname = 'xbc1234'
+var bucketname = 'grue2'
