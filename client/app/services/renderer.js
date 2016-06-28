@@ -61,23 +61,17 @@ class Renderer
     }
 
     _transferAllFiles(files) {
-        var that = this;
-        return that.VaultAPI.DocService.GetDownloadTickets(files)
+        return this.VaultAPI.DocService.GetDownloadTickets(files)
         .then(function() {
-            var transferPromises = [];
-            for( var i = 0; i < files.length; i++) {
-                transferPromises.push(that._transferFile(files[i]));
-            }
-            return Promise.all(transferPromises);
-        });
+            return Promise.all(files.map(this._transferFile.bind(this)));
+        }.bind(this));
     };
 
     _transferFile(file) {
-        var that = this;
-        return that.VaultAPI.FilestoreService.DownloadFile(file)
+         return this.VaultAPI.FilestoreService.DownloadFile(file)
         .then(function(base64data) {
-            return that.ForgeAPI.uploadFile(file, base64data);
-        })
+            return this.ForgeAPI.uploadFile(file, base64data);
+        }.bind(this))
         .then(function(result) {
             file.urn = result.urn;
             return result.urn;
