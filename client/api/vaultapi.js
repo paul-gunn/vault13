@@ -72,10 +72,7 @@ class FilestoreVaultService extends ServiceBase {
     };
 
     GetAllKnowledgeVaults() {
-        return this._callAPI('GetAllKnowledgeVaults')
-        .then(function(vaults) {
-            return vaults.KnowledgeVault;  // unwrap  
-      });	
+        return this._callAPI('GetAllKnowledgeVaults').then(_normalizeArrayResult);
     };
 };
 
