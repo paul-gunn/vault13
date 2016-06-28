@@ -40,9 +40,16 @@ var authenticate = function(isclient) {
      });
 };
 
-
+var _buckets = {};
 
 var createBucket = function(token, bucketName) {
+    if( _buckets[bucketName] ) { 
+        return new Promise(function(resolve, reject) { // return immediate result in a promise
+            console.log("Bucket already created: " + bucketname);
+            resolve(bucketname);
+        });
+    }
+
     return request( {
         url: forgeUrls.ossUrl,
         method: 'POST',
@@ -53,8 +60,9 @@ var createBucket = function(token, bucketName) {
             }        
     })
     .then(function(resp) {     
-        console.log("Create bucket");
-        console.log(resp);
+        console.log("Create bucket: " + bucketname);
+        console.log(resp.body);
+        _buckets[bucketName] = true;
         return bucketname; // may have already been created
     });
 };
