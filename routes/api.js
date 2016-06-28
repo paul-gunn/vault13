@@ -17,8 +17,6 @@ var bucket = serverAuth.then(function(creds) {
     return forge.createBucket(creds.access_token, bucketname);
 });
 
-
-
 router.post("/signin", function(req, res) {
 
     clientAuth.then(function(creds) {

@@ -64,22 +64,30 @@ ul {
 }
 .vaultfile {
   clear: both;
-  padding: 10px;
-  min-height: 30px;
+  padding: 5px;
+  min-height: 100px;
   width: 60%;  
   background-color: lightblue; 
-  margin-bottom: 20px    
+  margin-bottom: 20px ;
+  display: flex;
+  align-items: center;
 }
 
 .vaultfile .filename {
-   float: left;  
-   clear: left;
+  margin-left: 110px;
+}
+
+.vaultfile .thumbnail {
+  float: left;  
+  clear: left;
+  height: 100px;
+  width: 100px;
 }
 
 .vaultfile .fileview {
    padding-left: 50px;  
    font-style: italic;
-      float: right;  
+   margin-left: auto;
 }
 
 form {
@@ -139,3 +147,4 @@ input[type=url]:focus {
   width: 218px;
   height: 147px;
 }
+

@@ -7,7 +7,7 @@ angular.module('vaultViewer.main', [])
     $scope.doSearch = function() {
         VaultAPI.DocService.FindFilesBySearchConditions($scope.searchText)
         .then(function(files) {
-            $scope.files = files;     
+            $scope.files = files.map( file => _.defaults(file, { url: "./assets/default.jpg"  }));     
         });
     };
 
@@ -29,6 +29,7 @@ angular.module('vaultViewer.main', [])
 }).directive('vaultFile', function () {
   return {
     template: "<li class='vaultfile' > \
+      <img class='thumbnail' src='{{file.url}}' />    \
       <span class='filename' >{{file.Name}}</span> \
       <a class='fileview' href='' ng-click='doView(file)'>View</a> \
     </li>"
