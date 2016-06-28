@@ -199,6 +199,7 @@ var createRelationships = function(dependencies) {
     var token;
     return authenticate()
     .then(function(creds) {
+        console.log(dependencies);
         token = creds.access_token;
         return setReferences(token, dependencies)
     });

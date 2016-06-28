@@ -36,6 +36,14 @@ router.post("/register", function(req, res) {
     });
 });
 
+router.post("/relationships", function(req, res) {
+
+    forge.createRelationships(req.body.relationships)
+    .then(function(resp) {
+       res.json(resp);
+    });
+});
+
 router.get("/viewStatus", function(req, res) {
 
     forge.getViewStatus(req.query.urn)
@@ -46,44 +54,3 @@ router.get("/viewStatus", function(req, res) {
 
 module.exports = router;
 
-//////////////test//////////////
-router.post("/test", function(req, res) {
-
-//urn:adsk.objects:os.object:xbc1234/Basic_Assembly.iam -- dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6eGJjMTIzNC9CYXNpY19Bc3NlbWJseS5pYW0=
-//urn:adsk.objects:os.object:xbc1234/Block_Part.ipt -- dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6eGJjMTIzNC9CbG9ja19QYXJ0LmlwdA==
-//urn:adsk.objects:os.object:xbc1234/Tube_Part.ipt -- dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6eGJjMTIzNC9UdWJlX1BhcnQuaXB0
-
-
- // possible payload?
- var sample = 
- { filename: "Basic Assembly.iam", urn: "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6eGJjMTIzNC9CYXNpY19Bc3NlbWJseS5pYW0=",
-     children: [  
-        { filename: "Tube Part.ipt", urn: "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6eGJjMTIzNC9CbG9ja19QYXJ0LmlwdA==" },
-        { filename: "Block Part.ipt", urn: "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6eGJjMTIzNC9UdWJlX1BhcnQuaXB0" } 
-               ]
- };
-
- var dependencies = {
-    "master" : "urn:adsk.objects:os.object:xbc1234/Basic_Assembly.iam",
-    "dependencies" : [
-      { "file" : "urn:adsk.objects:os.object:xbc1234/Block_Part.ipt",
-        "metadata" : {
-            "childPath" : "Block Part.ipt",
-            "parentPath" : "Basic Assembly.iam"
-        }
-      },
-      { "file" : "urn:adsk.objects:os.object:xbc1234/Tube_Part.ipt",
-        "metadata" : {
-            "childPath" : "Tube Part.ipt",
-            "parentPath" : "Basic Assembly.iam"
-        }
-      }
-      ]
-    }   
-
-    forge.createRelationships(dependencies)
-    .then(function(resp) {
-        res.json({urn:'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6eGJjMTIzNC9CYXNpY19Bc3NlbWJseS5pYW0='});
-    });
-        
-});

@@ -17,6 +17,10 @@ class ForgeAPI {
              }).then(_extractData);
      };
 
+    createRelationships(relationships) {
+        return this.$http.post('/api/relationships', { relationships: relationships } ).then(_extractData);
+    };
+
     registerView(urn) {
         return this.$http.post('/api/register', { urn: urn } ).then(_extractData);
     };

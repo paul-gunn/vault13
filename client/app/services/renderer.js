@@ -39,17 +39,6 @@ class Renderer
         }.bind(this));
     }
 
-    _createFileDictionary(parentFile, dependencies) {  // this will also eliminate duplicates
-        var mapping = { };
-        mapping[parentFile.Id] = parentFile;
-
-        for( var i = 0; i < dependencies.length; i ++) {
-            mapping[dependencies[i].CldFile.Id] = dependencies[i].CldFile;
-        }
-
-        return mapping;
-    }
-
     renderFile(file) {
         this._currentJob = { file: file, done: false, urn: null, progress: 'Uploading files..'  };
         var fileDictionary;
@@ -61,15 +50,14 @@ class Renderer
             fileDictionary = this._createFileDictionary(file, fileAssociations);
             return this._transferAllFiles(_.values(fileDictionary));
          }.bind(this))
+         .then(function() { 
+            var relationships = this._createRelationships(file, fileAssociations, fileDictionary);
+            return this.ForgeAPI.createRelationships(relationships);
+         }.bind(this))
          .then(function() {
-            console.log(fileDictionary);  
-         });
-
-        // return this._transferFile(file)
-        // .then(function(urn) {
-        //     this._currentJob.urn = urn;
-        //     return this._renderView(urn);
-        // }.bind(this));
+            this._currentJob.urn = file.urn;
+            return this.ForgeAPI.registerView(file.urn);
+         }.bind(this));
     }
 
     _transferAllFiles(files) {
@@ -105,8 +93,31 @@ class Renderer
         });
     };
 
-    _renderView(urn) {
-        return this.ForgeAPI.registerView(urn);
-    };
+    _createFileDictionary(parentFile, dependencies) {  // this will also eliminate duplicates
+        var mapping = { };
+        mapping[parentFile.Id] = parentFile;
+
+        for( var i = 0; i < dependencies.length; i ++) {
+            mapping[dependencies[i].CldFile.Id] = dependencies[i].CldFile;
+        }
+
+        return mapping;
+    }
+
+    _createRelationships(parentFile, associations, fileDictionary) {
+        var relationships = { master: atob(parentFile.urn), dependencies: [] };
+        
+        _.each(associations, function(assoc) {
+            // get files from dictionary as they have the URN data
+            var currentChild = fileDictionary[assoc.CldFile.Id];
+            var currentParent = fileDictionary[assoc.ParFile.Id];
+            var current = { file: atob(currentChild.urn), metadata: {} }
+            current.metadata.childPath = currentChild.Name;
+            current.metadata.parentPath = currentParent.Name;
+            relationships.dependencies.push(current);
+        });
+
+        return relationships;
+    }
 
 };
