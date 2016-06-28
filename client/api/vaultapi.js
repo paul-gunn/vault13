@@ -131,7 +131,7 @@ class DocService extends ServiceBase {
            childRecurse: true, includeRelatedDocuments: false, includeHidden: false, releasedBiased : false}
         return this._callAPI('GetLatestFileAssociationsByMasterIds', data)
         .then(function(results) {
-            return results.FileAssocArray.FileAssocs.FileAssoc; // unwrap to return actual array
+            return results.FileAssocArray.FileAssocs ? results.FileAssocArray.FileAssocs.FileAssoc : []; // unwrap to return actual array
         });
     }
 };
