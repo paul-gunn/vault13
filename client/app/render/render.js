@@ -11,11 +11,12 @@ angular.module('vaultViewer.render', [])
     var waitForCompletion = function() {
         Renderer.getCurrentJob()
         .then(function(currentJob) {
-            if( currentJob.done ) {
+            $scope.currentJob = currentJob;
+
+            if( currentJob.done && currentJob.renderStatus.status === 'success') {
                 $location.path('/view/' + currentJob.urn);   
-            } else {
-                $scope.currentJob = currentJob;
-                timer = $timeout(waitForCompletion, 1000);
+            } else if (!currentJob.done ) {
+                 timer = $timeout(waitForCompletion, 1000); // poll for result in 1s
             }
         });
     };

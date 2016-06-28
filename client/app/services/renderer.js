@@ -29,18 +29,14 @@ class Renderer
 
         return this._getRenderStatus(this._currentJob.urn)
         .then(function(result) {
-            if( result.progress === 'complete' ) {
-                this._currentJob.done = true;
-                this._setRenderedFile(this._currentJob.file, this._currentJob.urn); 
-            }  else {
-                this._currentJob.progress = 'Rendering.. ' + result.progress;
-            }
+            this._currentJob.renderStatus = result;
+            this._onRenderProgress();
             return this._currentJob;
         }.bind(this));
     }
 
     renderFile(file) {
-        this._currentJob = { file: file, done: false, urn: null, progress: 'Uploading files..'  };
+        this._currentJob = { file: file, done: false, urn: null };
         var fileDictionary;
         var fileAssociations;
 
@@ -61,6 +57,7 @@ class Renderer
     }
 
     _transferAllFiles(files) {
+        this._initFileUpload(files.length);
         return this.VaultAPI.DocService.GetDownloadTickets(files)
         .then(function() {
             return Promise.all(files.map(this._transferFile.bind(this)));
@@ -73,9 +70,10 @@ class Renderer
             return this.ForgeAPI.uploadFile(file, base64data);
         }.bind(this))
         .then(function(result) {
+            this._onFileUpload();
             file.urn = result.urn;
             return result.urn;
-        });
+        }.bind(this));
     };
 
     _getRenderStatus(urn) {
@@ -114,4 +112,31 @@ class Renderer
         return relationships;
     }
 
+    _initFileUpload(count) {
+        this._currentJob.filesTotal = count;
+        this._currentJob.filesCurrent = 0;
+        this._uploadProgress();
+    };
+
+    _onFileUpload() {
+        this._currentJob.filesCurrent ++;
+        this._uploadProgress();
+    };
+
+    _uploadProgress() {
+        this._currentJob.progress = `Uploading files.. (${this._currentJob.filesCurrent} / ${this._currentJob.filesTotal})`
+    };
+
+    _onRenderProgress() {
+        if( !this._currentJob.renderStatus.progress ) {
+            return;
+        }
+         if( this._currentJob.renderStatus.progress === 'complete' ) {
+            this._currentJob.progress = 'Rendering.. ' + this._currentJob.renderStatus.status;
+            this._currentJob.done = true;
+            this._setRenderedFile(this._currentJob.file, this._currentJob.urn); 
+        }  else {
+            this._currentJob.progress = 'Rendering.. ' + this._currentJob.renderStatus.progress;
+        }
+    }
 };
