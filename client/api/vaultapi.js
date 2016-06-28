@@ -5,6 +5,7 @@ class VaultAPI {
         this.FilestoreService = new FilestoreService();
         this.AuthService = new AuthService();
         this.DocService = new DocService();
+        this.PropertyService = new PropertyService();
     };
 
     signIn(userName, password, vaultName) {
@@ -90,6 +91,31 @@ class AuthService extends ServiceBase {
     };
 };
 
+class PropertyService extends ServiceBase {
+    constructor() {
+        super("PropertyService", 'v22/','Services/Property/2/3/2016/');
+    };
+
+    GetPropertyDef(entClass, sysName) {
+      var data = { entityClassId: entClass};
+      return this._callAPI('GetPropertyDefinitionsByEntityClassId', data).then(_normalizeArrayResult)
+      .then(function(propDefs) {
+          return _.find(propDefs, pd => pd.SysName === sysName);
+      });
+    };
+
+    GetProperties(entClass, entIds, propdefIds) {
+       var data =
+        `<GetProperties xmlns="http://AutodeskDM/Services/Property/2/3/2016/"> \
+        <entityClassId>${entClass}</entityClassId> \
+        <entityIds>${_idArray(entIds)}</entityIds> \
+        <propertyDefIds>${_idArray(propdefIds)}</propertyDefIds> \
+        </GetProperties>`
+
+       return this._callAPI('GetProperties', data).then(_normalizeArrayResult);
+    }
+};
+
 class DocService extends ServiceBase {
     constructor() {
         super("DocumentService", 'v22/','Services/Document/2/3/2016/');
@@ -109,13 +135,9 @@ class DocService extends ServiceBase {
     };
 
     GetDownloadTickets(files) {
-        var ids = files.map( function(file) {
-          return `<long>${file.Id}</long>`;
-        }).join('');
-        
         var data =
          `<GetDownloadTicketsByFileIds xmlns="http://AutodeskDM/Services/Document/2/3/2016/"> \
-            <fileIds>${ids}</fileIds> \
+            <fileIds>${_idArray(files.map( file => file.Id ))}</fileIds> \
           </GetDownloadTicketsByFileIds>`
         return this._callAPI('GetDownloadTicketsByFileIds', data).then(_normalizeArrayResult)
         .then(function(tickets) {
@@ -131,8 +153,8 @@ class DocService extends ServiceBase {
            childRecurse: true, includeRelatedDocuments: false, includeHidden: false, releasedBiased : false}
         return this._callAPI('GetLatestFileAssociationsByMasterIds', data)
         .then(function(results) {
-            return results.FileAssocArray.FileAssocs ? results.FileAssocArray.FileAssocs.FileAssoc : []; // unwrap to return actual array
-        });
+            return _normalizeArrayResult(results.FileAssocArray.FileAssocs);
+        })
     }
 };
 
@@ -162,6 +184,10 @@ class FilestoreService extends ServiceBase {
     //<bookmark/>
  //</FindFilesBySearchConditions>
 //</s:Body></s:Envelope>
+
+var _idArray = function(ids) {
+  return ids.map( function(id) { return `<long>${id}</long>`;  }).join('');
+};
 
 
 var _normalizeArrayResult = function(result) {
