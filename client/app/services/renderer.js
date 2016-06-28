@@ -39,41 +39,30 @@ class Renderer
         }.bind(this));
     }
 
-    _createFileMapping(files) {  // this will also eliminate duplicates
-        var mapping = {};
-        for( var i = 0; i < files.length; i ++) {
-            mapping[files[i].Id] = files[i];
+    _createFileDictionary(parentFile, dependencies) {  // this will also eliminate duplicates
+        var mapping = { };
+        mapping[parentFile.Id] = parentFile;
+
+        for( var i = 0; i < dependencies.length; i ++) {
+            mapping[dependencies[i].CldFile.Id] = dependencies[i].CldFile;
         }
 
         return mapping;
     }
 
-    _getValues(mapping) {
-        var results = [];
-
-        for(var key in mapping) {
-            results.push(mapping[key]);
-        }        
-        return results;
-    }
-
     renderFile(file) {
         this._currentJob = { file: file, done: false, urn: null, progress: 'Uploading files..'  };
-        var fileMapping;
+        var fileDictionary;
         var fileAssociations;
 
         this.VaultAPI.DocService.GetFileDependencies(file)
         .then(function(result) {
             fileAssociations = result;
-            var allfiles = fileAssociations.map(function(assoc) { 
-                return assoc.CldFile 
-            });
-            allfiles.push(file);
-            fileMapping = this._createFileMapping(allfiles);
-            return this._transferAllFiles(this._getValues(fileMapping));
+            fileDictionary = this._createFileDictionary(file, fileAssociations);
+            return this._transferAllFiles(_.values(fileDictionary));
          }.bind(this))
          .then(function() {
-            console.log(fileMapping);  
+            console.log(fileDictionary);  
          });
 
         // return this._transferFile(file)

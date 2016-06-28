@@ -166,18 +166,6 @@ class FilestoreService extends ServiceBase {
  //</FindFilesBySearchConditions>
 //</s:Body></s:Envelope>
 
-// <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Header><SecurityHeader xmlns="http://AutodeskDM/Services" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><Ticket>9512db18-def3-4c35-aab6-047243bbb7d3</Ticket><UserId>2</UserId></SecurityHeader></s:Header>
-// <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-// <GetLatestFileAssociationsByMasterIds xmlns="http://AutodeskDM/Services/Document/2/3/2016/">
-// <fileMasterIds><long>3876</long></fileMasterIds>
-// <parentAssociationType>All</parentAssociationType>
-// <parentRecurse>true</parentRecurse>
-// <childAssociationType>All</childAssociationType>
-// <childRecurse>true</childRecurse>
-// <includeRelatedDocuments>false</includeRelatedDocuments>
-// <includeHidden>false</includeHidden>
-// <releasedBiased>false</releasedBiased></GetLatestFileAssociationsByMasterIds>
-// </s:Body></s:Envelope>
 
 var _normalizeArrayResult = function(result) {
     if( result == null ) {
