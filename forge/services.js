@@ -40,30 +40,20 @@ var authenticate = function(isclient) {
      });
 };
 
-var _buckets = {};
-
 var createBucket = function(token, bucketName) {
-    if( _buckets[bucketName] ) { 
-        return new Promise(function(resolve, reject) { // return immediate result in a promise
-            console.log("Bucket already created: " + bucketname);
-            resolve(bucketname);
-        });
-    }
-
-    return request( {
+     return request( {
         url: forgeUrls.ossUrl,
         method: 'POST',
         headers: {  Authorization: 'Bearer ' + token  },
         json: {
-                bucketKey: bucketname,
+                bucketKey: bucketName,
                 policy: 'transient'
             }        
     })
     .then(function(resp) {     
-        console.log("Create bucket: " + bucketname);
+        console.log("Create bucket: " + bucketName);
         console.log(resp.body);
-        _buckets[bucketName] = true;
-        return bucketname; // may have already been created
+        return bucketName; // may have already been created
     });
 };
 
@@ -94,6 +84,7 @@ var getUrnFromResponse = function(resp) {
 
 var uploadFile = function(token, bucketName, filename, bytes) {
 
+    filename = filename.replaceAll(' ', '_'); // viewer doesn't like spaces
     var url = forgeUrls.ossUrl + '/' + bucketName + '/objects/' + filename;
 
     return doUploadFile(token, url, bytes)
@@ -123,6 +114,10 @@ var getViewingStatus = function(token, urn) {
         method: 'GET',
         headers: { Authorization: 'Bearer ' + token },
      })
+    .then(function(resp) {
+        console.log(resp.body);
+        return resp.body;
+    });
 };
 
 var registerFile = function(token, urn) {
@@ -137,7 +132,7 @@ var registerFile = function(token, urn) {
     });
 };
 
-var setReferences = function(token, dependencies) {
+var createRelationships = function(token, dependencies) {
    return request( {
         url: forgeUrls.relationshipUrl,
         method: 'POST',
@@ -147,79 +142,11 @@ var setReferences = function(token, dependencies) {
 };
 /////////////////////////////
 
-
-var upload = function(fileName, bytes) {
-    var token;
-
-    fileName = fileName.replaceAll(' ', '_'); // viewer doesn't like spaces
-
-    return authenticate()
-    .then(function(creds) {
-        token = creds.access_token;
-        return createBucket(token, bucketname);
-    })
-    .then(function() {
-        return uploadFile(token, bucketname, fileName, bytes);
-    });
-};
-
-var register = function(urn) {
-    var token;
-
-     return authenticate()
-    .then(function(creds) {
-        token = creds.access_token;
-        return registerFile(token, urn);
-    });
-};
-
-var getStatus = function(fileName) {
-    var token;
-    return authenticate()
-    .then(function(creds) {
-        token = creds.access_token;
-        return getFileStatus(token, bucketname, fileName);
-    })
-    .then(function(resp) {
-        var urn = getUrnFromResponse(resp);
-        return getViewingStatus(token, urn)
-    })
-    .then(function(resp) {
-        console.log(resp.body);
-        return resp.body;
-    });
-};
-
-var getViewStatus = function(urn) {
-    var token;
-    return authenticate()
-    .then(function(creds) {
-        token = creds.access_token;
-        return getViewingStatus(token, urn)
-    })
-    .then(function(resp) {
-        console.log(resp.body);
-        return resp.body;
-    });
-};
-
-var createRelationships = function(dependencies) {
-    var token;
-    return authenticate()
-    .then(function(creds) {
-        console.log(dependencies);
-        token = creds.access_token;
-        return setReferences(token, dependencies)
-    });
-};
-
 module.exports = {
     authenticate: authenticate,
-    upload: upload,
-    register: register,
-    getStatus: getStatus,
-    getViewStatus: getViewStatus,
-    createRelationships:createRelationships
+    uploadFile: uploadFile,
+    registerFile: registerFile,
+    getViewingStatus: getViewingStatus,
+    createRelationships:createRelationships,
+    createBucket: createBucket
 }
-
-var bucketname = 'grue2'

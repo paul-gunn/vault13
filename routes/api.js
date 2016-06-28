@@ -9,19 +9,30 @@ var uuid = require('node-uuid');
 
 router.use( bodyParser() );       // to support JSON-encoded bodies
 
+// cached promises. TODO: handle expiration of tokens
+var bucketname = 'grue2';
+var serverAuth = forge.authenticate();
+var clientAuth = forge.authenticate(true);
+var bucket = serverAuth.then(function(creds) {
+    return forge.createBucket(creds.access_token, bucketname);
+});
+
+
+
 router.post("/signin", function(req, res) {
 
-    forge.authenticate(true)
-    .then(function(creds) {
+    clientAuth.then(function(creds) {
         res.json(creds);
     });
  
 });
 
 router.post("/upload", multer().single('fileupload'), function(req, res) {
-
     var ext = req.headers['x-file-ext'];
-    forge.upload(uuid.v1() + '.' + ext, req.file.buffer)
+    
+    bucket.then( () => serverAuth ).then(function(creds) {
+        return forge.uploadFile(creds.access_token, bucketname, uuid.v1() + '.' + ext, req.file.buffer)
+    })
     .then(function(urn) {
        res.json({urn:urn});
     });
@@ -30,7 +41,9 @@ router.post("/upload", multer().single('fileupload'), function(req, res) {
 
 router.post("/register", function(req, res) {
 
-    forge.register(req.body.urn)
+    serverAuth.then(function(creds) {
+        return forge.registerFile(creds.access_token, req.body.urn)
+    })
     .then(function() {
        res.sendStatus(200);
     });
@@ -38,7 +51,9 @@ router.post("/register", function(req, res) {
 
 router.post("/relationships", function(req, res) {
 
-    forge.createRelationships(req.body.relationships)
+    serverAuth.then(function(creds) {
+        return forge.createRelationships(creds.access_token, req.body.relationships)
+    })
     .then(function(resp) {
        res.json(resp);
     });
@@ -46,7 +61,9 @@ router.post("/relationships", function(req, res) {
 
 router.get("/viewStatus", function(req, res) {
 
-    forge.getViewStatus(req.query.urn)
+    serverAuth.then(function(creds) {
+        return forge.getViewingStatus(creds.access_token, req.query.urn)
+    })
     .then(function(resp) {
        res.json(resp);
     });
