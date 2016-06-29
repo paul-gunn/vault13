@@ -35,15 +35,10 @@ angular.module('vaultViewer.services', [])
     VaultAPI.signOut();
     $location.path('/signin');
   };
-
-  var getAllVaults = function() {
-    return VaultAPI.FilestoreVaultService.GetAllKnowledgeVaults()
-  }
   
   return {
     signin: signin,
     isAuth: isAuth,
     signout: signout,
-    getAllVaults: getAllVaults
   };
 });

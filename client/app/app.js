@@ -11,10 +11,7 @@ angular.module('vaultViewer', [
   $routeProvider
     .when('/signin', {
       templateUrl: 'app/auth/signin.html',
-      controller: 'AuthController',
-      resolve: {vaults: function (Auth) {
-        return Auth.getAllVaults();
-      }}
+      controller: 'AuthController'
     })
     .when('/main', {
       templateUrl: 'app/main/main.html',

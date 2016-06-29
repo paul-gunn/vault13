@@ -2,7 +2,7 @@
   <form name="signinForm" ng-submit='signin()'>
   <div class="form-group">
       <label for="user-server">Server: </label>
-      <input class='form-input' name="user-server" type='text' ng-model='user.server' required/>
+      <input class='form-input' name="user-server" type='text' ng-model='user.server' required ng-model-options="{ debounce: 1000 }" ng-change="contactServer()" />
   </div>
   <div class="form-group">
       <label for="user-name">User name: </label>

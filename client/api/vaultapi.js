@@ -8,6 +8,21 @@ class VaultAPI {
         this.PropertyService = new PropertyService();
     };
 
+    setHostUri(hostUri) {
+        if( hostUri.indexOf('//') === -1) {
+            hostUri = "http://" + hostUri;
+        }
+        
+        var _ident = new IdentService(hostUri);
+        return _ident.GetServerIdentities()
+        .then(function(identities) {
+            for( var service in this ) {  // set all service hostUris on success
+                this[service]._hostUri = hostUri;
+            }
+            return identities;
+        }.bind(this));
+    }
+
     signIn(userName, password, vaultName) {
         return this.IdentService.GetServerIdentities()
         .then(function(identities) {
@@ -44,7 +59,7 @@ class ServiceBase {
         var soapHeader = this._securityHeader ? {SecurityHeader:this._securityHeader} : null;
 
         return new Promise(function(resolve, reject) {
-            _soap(this._uriPath, this._actionPath, this._serviceName, 
+            _soap(this._hostUri, this._uriPath, this._actionPath, this._serviceName, 
                 methodName, data, soapHeader, unwrapResponse, function(err, result) {
                 if( !err ) { 
                     resolve(result);
@@ -58,8 +73,9 @@ class ServiceBase {
 };
 
 class IdentService extends ServiceBase {
-    constructor() {
+    constructor(hostUri) {
         super("IdentificationService", 'Filestore/v22/', 'Filestore/Identification/2/3/2016/');
+        this._hostUri = hostUri;
     };
 
     GetServerIdentities() {
@@ -208,11 +224,11 @@ var _normalizeArrayResult = function(result) {
     }
 }
 
-var _soap = function(uriPath, actionPath, serviceName, methodName, parameters, soapHeader, unwrapResponse, cb) {
-    var baseUri = 'http://localhost/autodeskdm/Services/';
+var _soap = function(host, uriPath, actionPath, serviceName, methodName, parameters, soapHeader, unwrapResponse, cb) {
+    var baseUri = '/autodeskdm/Services/';
     var baseAction = 'http://AutodeskDM/'
     $.soap({
-        url:        baseUri    + uriPath    + serviceName + '.svc',
+        url: host + baseUri    + uriPath    + serviceName + '.svc',
         SOAPAction: baseAction + actionPath + serviceName + '/' + methodName,
         data: parameters || {},
         appendMethodToURL: false,
@@ -231,7 +247,11 @@ var _soap = function(uriPath, actionPath, serviceName, methodName, parameters, s
         error: function (soapResponse) {
             console.log(methodName + ' failure');
             var response = soapResponse.toJSON();
-            var err = response.Body.Fault; // unwrap [body, fault] to return soap fault
+            var err = new Error('Failure calling web service: ' + methodName);
+            if( response.Body) {
+                err.fault = response.Body.Fault;
+                console.log(response.Body.Fault);
+            }
             cb(err, null);
        }
     });
