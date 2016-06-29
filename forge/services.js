@@ -1,4 +1,13 @@
-var credentials = require('./credentials')
+var optional = require("optional");
+var credentials = optional('./forge/credentials')
+
+credentials = credentials || 
+{
+	url: process.env.FORGE_SERVER,
+	clientId: process.env.FORGE_KEY,
+	clientSecret: process.env.FORGE_SECRET,
+}
+
 var fs = require('fs');
 var Promise = require('bluebird');
 var _request = require('request');
