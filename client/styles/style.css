@@ -90,6 +90,25 @@ ul {
    margin-left: auto;
 }
 
+#welcome {
+  margin-left: 40px;
+  display: flex;
+  align-items: center;
+  clear: both;
+  margin-bottom: 20px ;
+  width: 60%;
+  background-color: lightblue;
+}
+
+#welcome-img {
+  margin-left: auto;
+}
+
+#welcome-message {
+  font-weight: 200;
+  padding-left: 50px
+}
+
 form {
   margin: 10px;
 }

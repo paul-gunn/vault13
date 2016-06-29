@@ -1,6 +1,9 @@
 <div id='container' >
+  <div id='welcome'>
+    <h2 id="welcome-message" >Welcome to Vault 13</h2><img id="welcome-img" src="./assets/vault-tec.png" />
+  </div>  
   <ul>
-    <input id='searchbox' type="text" ng-model="searchText" ng-model-options="{ debounce: 500 }" ng-change="doSearch()" />
+    <input id='searchbox' placeholder="Search the vault" type="text" ng-model="searchText" ng-model-options="{ debounce: 500 }" ng-change="doSearch()" />
     <vault-file  ng-repeat='file in files' /> 
   </ul>
 </div>
