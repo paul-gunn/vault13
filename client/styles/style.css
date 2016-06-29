@@ -167,3 +167,25 @@ input[type=url]:focus {
   height: 147px;
 }
 
+.form-group {
+  display: flex;
+  align-items: center;
+  margin: 20px;
+  min-height: 20px;
+  width: 500px;
+}
+
+.form-input {
+  background-color: lightblue;
+  margin-left: auto
+}
+
+#signin-button {
+ font-weight: 100;
+ font-size: 15pt;
+ background-color: lightblue;
+ margin-left: 200px;
+ min-height: 100px;
+ min-width: 200px;
+ border-radius: 15%
+}
