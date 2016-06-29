@@ -189,3 +189,16 @@ input[type=url]:focus {
  min-width: 200px;
  border-radius: 15%
 }
+
+#server-connection {
+	border-radius: 50%;
+	width: 20px;
+	height: 20px; 
+  margin-right: 10px
+}
+
+.connection-error { background-color: red; }
+.connection-ok { background-color: green; }
+.connection-testing { background-color: yellow; }
+.connection-none { background-color: white; }
+

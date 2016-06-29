@@ -4,17 +4,22 @@ angular.module('vaultViewer.auth', [])
 .controller('AuthController', function ($scope, $location, Auth, VaultAPI) {
   $scope.user = {};
   $scope.vaults = [];
+ $scope.connectionstatus = 'connection-none'
 
   $scope.contactServer = function() {
+      if(!$scope.user.server) {
+        return;
+      }
+      
+      $scope.connectionstatus = 'connection-testing'
       VaultAPI.setHostUri($scope.user.server)
       .then(function(identities) {
-        // indicate success
+        $scope.connectionstatus = 'connection-ok'
         return loadVaults();
       })
       .catch(function(err) {
-        console.log(err);
+        $scope.connectionstatus = 'connection-error'
         $scope.vaults = [];
-        // indicate error
       });
 
    };

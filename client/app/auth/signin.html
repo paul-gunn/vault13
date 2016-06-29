@@ -1,6 +1,7 @@
 <div id='signin'>
   <form name="signinForm" ng-submit='signin()'>
   <div class="form-group">
+      <div id='server-connection' ng-class='connectionstatus'></div>
       <label for="user-server">Server: </label>
       <input class='form-input' name="user-server" type='text' ng-model='user.server' required ng-model-options="{ debounce: 1000 }" ng-change="contactServer()" />
   </div>
