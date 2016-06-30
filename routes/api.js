@@ -7,7 +7,7 @@ var multer = require('multer')
 var bodyParser = require('body-parser')
 var uuid = require('node-uuid');
 
-router.use( bodyParser() );       // to support JSON-encoded bodies
+router.use( bodyParser.json() );       // to support JSON-encoded bodies
 
 // cached promises. TODO: handle expiration of tokens
 var bucketname = 'grue2';
