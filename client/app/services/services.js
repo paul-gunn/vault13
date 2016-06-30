@@ -1,6 +1,6 @@
-import VaultAPI from '../../api/VaultAPI';
-import ForgeAPI from '../../api/ForgeAPI';
-import Renderer from './Renderer';
+import VaultAPI from '../../api/vaultapi';
+import ForgeAPI from '../../api/forgeapi';
+import Renderer from './renderer';
 
 
 angular.module('vaultViewer.services', [])
