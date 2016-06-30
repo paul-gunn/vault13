@@ -10,6 +10,15 @@ var uuid = require('node-uuid');
 
 router.use( bodyParser.json() );       // to support JSON-encoded bodies
 
+// prevent caching
+router.use( function nocache(req, res, next) {
+  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  res.header('Expires', '-1');
+  res.header('Pragma', 'no-cache');
+  next();
+});
+
+
 // cached promises. 
 var bucketname = 'grue2';
 var serverAuth, clientAuth;;
