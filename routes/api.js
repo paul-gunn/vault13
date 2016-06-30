@@ -1,5 +1,6 @@
 var express = require('express');
 var request = require('request');
+var Promise = require('bluebird');
 
 var router = express.Router();
 var forge = require('../forge/services.js');
@@ -9,10 +10,20 @@ var uuid = require('node-uuid');
 
 router.use( bodyParser.json() );       // to support JSON-encoded bodies
 
-// cached promises. TODO: handle expiration of tokens
+// cached promises. 
 var bucketname = 'grue2';
-var serverAuth = forge.authenticate();
-var clientAuth = forge.authenticate(true);
+var serverAuth, clientAuth;;
+function CacheCredentials() {
+    serverAuth = forge.authenticate();
+    clientAuth = forge.authenticate(true);
+    return Promise.all( [serverAuth, clientAuth] )
+    .then(function(resultArray) {
+        var expiration = Math.min(resultArray[0].expires_in, resultArray[1].expires_in) - 60;  // renew 60s ahead
+        setTimeout(CacheCredentials, expiration*1000); // convert from seconds to milliseconds
+    });
+}
+
+CacheCredentials();
 var bucket = serverAuth.then(function(creds) {
     return forge.createBucket(creds.access_token, bucketname);
 });
