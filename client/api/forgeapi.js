@@ -1,4 +1,4 @@
-class ForgeAPI {
+export default class ForgeAPI {
     constructor($http) {
         this.$http = $http;
     };

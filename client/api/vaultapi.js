@@ -1,4 +1,4 @@
-class VaultAPI {
+export default class VaultAPI {
     constructor(options) {
         this.IdentService = new IdentService();
         this.FilestoreVaultService = new FilestoreVaultService();
@@ -58,7 +58,7 @@ class ServiceBase {
         data = data || {}
         var soapHeader = this._securityHeader ? {SecurityHeader:this._securityHeader} : null;
 
-        return new Promise(function(resolve, reject) {
+        return new P(function(resolve, reject) {
             _soap(this._hostUri, this._uriPath, this._actionPath, this._serviceName, 
                 methodName, data, soapHeader, unwrapResponse, function(err, result) {
                 if( !err ) { 

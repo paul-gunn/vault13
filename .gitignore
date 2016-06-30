@@ -1,5 +1,6 @@
 forge/credentials.js
 client/bower_components/*
+client/dist/*
 
 ###OSX###
 

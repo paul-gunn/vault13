@@ -1,4 +1,4 @@
-class Renderer
+export default class Renderer
 {
     constructor(VaultAPI, ForgeAPI) {
         this.VaultAPI = VaultAPI;
@@ -22,7 +22,7 @@ class Renderer
 
     getCurrentJob() {
         if( this._currentJob.done || !this._currentJob.urn ) { 
-            return new Promise(function(resolve, reject) { // return immediate result in a promise
+            return new P(function(resolve, reject) { // return immediate result in a promise
                 resolve(this._currentJob);
             }.bind(this));
         }
@@ -60,7 +60,7 @@ class Renderer
         this._initFileUpload(files.length);
         return this.VaultAPI.DocService.GetDownloadTickets(files)
         .then(function() {
-            return Promise.all(files.map(this._transferFile.bind(this)));
+            return P.all(files.map(this._transferFile.bind(this)));
         }.bind(this));
     };
 

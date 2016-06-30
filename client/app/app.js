@@ -50,7 +50,7 @@ angular.module('vaultViewer', [
 
 .run(function ($rootScope, $location, Auth) {
 
-  Promise.setScheduler(function (cb) {
+  P.setScheduler(function (cb) {
       $rootScope.$evalAsync(cb);
   });
 
