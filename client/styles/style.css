@@ -209,3 +209,7 @@ input[type=url]:focus {
   min-height: 20px;
   width: 100%;
 }
+
+.slack-input {
+  width: 25%
+}
