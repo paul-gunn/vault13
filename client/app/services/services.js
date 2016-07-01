@@ -46,4 +46,20 @@ angular.module('vaultViewer.services', [])
     isAuth: isAuth,
     signout: signout,
   };
+})
+.factory('Slack', function ($httpParamSerializer) {
+
+  var createSlackRedirect = function(urn) {
+      var redirectQuery = $httpParamSerializer({
+          'urn' : urn 
+      });
+
+      return window.location.origin + '/#/slack?' + redirectQuery;
+  }
+    
+  return {
+    createSlackRedirect: createSlackRedirect
+  };
 });
+
+

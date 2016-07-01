@@ -3,6 +3,7 @@ angular.module('vaultViewer', [
   'vaultViewer.main',
   'vaultViewer.render',  
   'vaultViewer.viewer',
+  'vaultViewer.slack',
   'vaultViewer.auth',
   'vaultViewer.nav',
   'ngRoute'
@@ -35,6 +36,11 @@ angular.module('vaultViewer', [
       controller: 'ViewerController',
       activetab: 'view',
       authenticate: false // anyone can view something that is already rendered
+    })
+    .when('/slack', {
+      templateUrl: 'app/slack/slack.html',
+      controller: 'SlackController',
+      authenticate: false 
     })
     .when('/signout', {
         template: "",
