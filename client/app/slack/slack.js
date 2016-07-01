@@ -8,12 +8,11 @@ angular.module('vaultViewer.slack', [])
 
     $scope.message = "";
     $scope.viewurl = window.location.origin + '/#/view/' +  queryParams.urn;
-
-    
-    $http.post('/slack/signin', { code: queryParams.code, redirect: Slack.createSlackRedirect(queryParams.urn) } )
+  
+    $http.post('/slack/signin', { code: queryParams.code, redirect: Slack.createSlackRedirect(queryParams.urn, queryParams.message, queryParams.channel) } )
     .then(function(creds) {
-        return $http.post('/slack/sendMessage', { token: creds.data.access_token, channel:  '#vault-grey', 
-        message: "this is a test: " + $scope.viewurl } )
+        return $http.post('/slack/sendMessage', { token: creds.data.access_token, channel:  queryParams.channel, 
+            message: queryParams.message + '\n' +  $scope.viewurl } )
     }).then(function(resp) {
         $scope.message = JSON.parse(resp.data.body).message.text;
     });

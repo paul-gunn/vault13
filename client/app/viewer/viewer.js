@@ -1,8 +1,9 @@
 angular.module('vaultViewer.viewer', [])
 
-.controller('ViewerController', function ($scope, $routeParams, $location, $httpParamSerializer, ForgeAPI, ViewState, Slack) {
+.controller('ViewerController', function ($scope, $routeParams, $location, $http, $httpParamSerializer, ForgeAPI, ViewState, Slack) {
     var viewerLocation = 'viewer';
-    
+    $scope.slack = { message : "", channel : "" };
+
     var urn = $routeParams.urn;
     if( !urn ) {
         if( ViewState.lastViewedUrn ) {
@@ -19,13 +20,17 @@ angular.module('vaultViewer.viewer', [])
     });    
 
     $scope.slackRedirect = function() {
-         var querystring = $httpParamSerializer({
-            'client_id' : '2778138625.56134296180',
-            'scope' : 'chat:write:user',
-            'redirect_uri' : Slack.createSlackRedirect(urn)
-       });
- 
-        location.href = 'https://slack.com/oauth/authorize?' + querystring;
-      };
+        $http.get('/slack/clientId')
+        .then(function(resp) {
+            var querystring = $httpParamSerializer({
+                'client_id' : resp.data.clientId,
+                'scope' : 'chat:write:user',
+                'redirect_uri' : Slack.createSlackRedirect(urn, $scope.slack.message, $scope.slack.channel)
+            });
+        
+         location.href = 'https://slack.com/oauth/authorize?' + querystring;
+        });
+
+    };
 });
 

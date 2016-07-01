@@ -10,7 +10,9 @@ credentials = credentials ||
 var Promise = require('bluebird');
 var request = Promise.promisify(require('request'));
 
-
+var getClientId = function() {
+    return credentials.clientId;
+}
 
 var authenticate = function(code, redirect) {
     return request( {
@@ -46,5 +48,6 @@ var sendMessage = function(token, channel, message) {
 
 module.exports = {
     authenticate: authenticate,
-    sendMessage: sendMessage
+    sendMessage: sendMessage,
+    getClientId: getClientId
 }

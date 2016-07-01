@@ -8,6 +8,11 @@ var bodyParser = require('body-parser')
 
 router.use( bodyParser.json() );       // to support JSON-encoded bodies
 
+router.get("/clientId", function(req, res) {
+    var clientId = slack.getClientId();
+    res.json( {clientId : clientId});
+});
+
 
 router.post("/signin", function(req, res) {
 

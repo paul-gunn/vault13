@@ -49,9 +49,9 @@ angular.module('vaultViewer.services', [])
 })
 .factory('Slack', function ($httpParamSerializer) {
 
-  var createSlackRedirect = function(urn) {
+  var createSlackRedirect = function(urn, message, channel) {
       var redirectQuery = $httpParamSerializer({
-          'urn' : urn 
+          urn : urn , message: message, channel: channel
       });
 
       return window.location.origin + '/#/slack?' + redirectQuery;
