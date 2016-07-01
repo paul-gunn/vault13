@@ -2,7 +2,7 @@
 angular.module('vaultViewer.auth', [])
 
 .controller('AuthController', function ($scope, $location, Auth, VaultAPI) {
-  $scope.user = {};
+  $scope.user = { server: 'nov2ua1351pyt', username: 'administrator' };
   $scope.vaults = [];
  $scope.connectionstatus = 'connection-none'
 
@@ -44,4 +44,5 @@ angular.module('vaultViewer.auth', [])
       }); 
   }
 
+  $scope.contactServer();
 });

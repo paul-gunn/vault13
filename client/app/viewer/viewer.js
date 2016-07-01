@@ -2,7 +2,7 @@ angular.module('vaultViewer.viewer', [])
 
 .controller('ViewerController', function ($scope, $routeParams, $location, $http, $httpParamSerializer, ForgeAPI, ViewState, Slack) {
     var viewerLocation = 'viewer';
-    $scope.slack = { message : "", channel : "" };
+    $scope.slack = { message : "", channel : "priv-novi-bootcamp" };
 
     var urn = $routeParams.urn;
     if( !urn ) {

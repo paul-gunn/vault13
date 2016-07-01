@@ -213,3 +213,15 @@ input[type=url]:focus {
 .slack-input {
   width: 25%
 }
+
+#slack-submission {
+  display: flex;
+  align-items: center;
+  margin: 20px;
+  min-height: 20px;
+  width: 30%;
+}
+
+#slack-submission a {
+  margin-left: auto  
+}
