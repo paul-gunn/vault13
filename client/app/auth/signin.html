@@ -3,7 +3,7 @@
   <div class="form-group">
       <div id='server-connection' ng-class='connectionstatus'></div>
       <label for="user-server">Server: </label>
-      <input class='form-input' name="user-server" type='text' ng-model='user.server' required ng-model-options="{ debounce: 6000 }" ng-change="contactServer()" />
+      <input class='form-input' name="user-server" type='text' ng-model='user.server' required ng-model-options="{ debounce: 3000 }" ng-change="contactServer()" />
   </div>
   <div class="form-group">
       <label for="user-name">User name: </label>
