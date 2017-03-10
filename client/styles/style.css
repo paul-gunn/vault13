@@ -219,7 +219,7 @@ input[type=url]:focus {
   align-items: center;
   margin: 20px;
   min-height: 20px;
-  width: 30%;
+  width: 400px;
 }
 
 #slack-submission a {
