@@ -7,6 +7,8 @@ In Action pane, select "View ordered list..." Seek OPTIONSVerbHandler, and move 
 You can also do this in web.config by redefining all handlers under <system.webServer><handlers> (<clear> then <add ...> them back, this is what does the IIS console for you) (By the way, there is no need to ask for "read" permission on this handler.)
 Second, configure custom http headers for your cors needs, such as:
 
+Test2
+
 <system.webServer>
   <httpProtocol>
     <customHeaders>
